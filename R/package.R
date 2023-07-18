@@ -430,7 +430,14 @@ pkg_download_internal <- function(pkg, dest_dir = ".", dependencies = FALSE,
 #' pkg_load("dplyr")
 #' ```
 
-pkg_load <- function(pkg, install = TRUE, lib = .libPaths()[[1L]], upgrade = FALSE, ask = interactive(), dependencies = NA) {
+pkg_load <- function(pkg, install = TRUE, character.only = FALSE, lib = .libPaths()[[1L]], upgrade = FALSE, ask = interactive(), dependencies = NA) {
+  # Parse arguments
+  if (character.only) {
+    pkg <- eval(match.call()[[2]])
+  } else {
+    pkg <- as.character(match.call(expand.dots = FALSE))
+  }
+
   # Try to load packages
   is_installed <- sapply(pkg, function(x) {
     return(suppressMessages(
