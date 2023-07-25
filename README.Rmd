@@ -44,9 +44,6 @@ Sys.setenv(R_USER_CACHE_DIR = tempfile())
 options(cli_num_colors = 256)
 ```
 
-| :info: This is forked version, which supports an alternative for `pacman::p_load()`, here `pak::pkg_load()`. <br> Please refer to [ventolab/CellphoneDB](https://github.com/r-lib/pak) for the original repository. |
-| -------- | 
-
 ## :rocket: Short tour
 
 #### Install or update packages from CRAN or Bioconductor
