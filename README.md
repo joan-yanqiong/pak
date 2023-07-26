@@ -1,7 +1,7 @@
 
 # pak
 
-| ⚠️ This is forked version, which supports an alternative for `pacman::p_load()`, here `pak::pkg_load()`. <br> Please refer to [r-lib/pak](https://github.com/r-lib/pak) for the original repository. |
+| ⚠️ This is forked version, which supports an alternative for `pacman::p_load()`, namely `pak::pkg_load()`. <br /> **For installation please use: `joan-yanqiong/pak@cran-0.5.1.`** <br /> Please refer to [r-lib/pak](https://github.com/r-lib/pak) for the original repository.|
 | -------- | 
 
 > A Fresh Approach to R Package Installation
