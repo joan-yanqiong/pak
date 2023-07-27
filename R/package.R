@@ -449,6 +449,18 @@ pkg_load <- function(pkg, install = TRUE, character.only = FALSE, lib = .libPath
     pkg_install(pkg[!is_installed],
       lib = lib, upgrade = upgrade, ask = ask, dependencies = dependencies
     )
+    # After installation try to load all packages
+    is_installed <- sapply(pkg, function(x) {
+      return(suppressMessages(
+        suppressWarnings(require(x, character.only = TRUE))
+      ))
+    })
+    # Give feedback to user
+    if (all(is_installed)) {
+      cli::cli_alert_success("All packages are loaded.")
+    } else {
+      cli::cli_alert_warning("{sum(!is_installed)} out of {length(is_installed)} packages are not currently installed.")
+    }
   } else {
     cli::cli_alert_info("Do not install missing packages.")
   }
