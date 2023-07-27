@@ -7,6 +7,7 @@
 pkg_load(
   pkg,
   install = TRUE,
+  character.only = FALSE,
   lib = .libPaths()[[1L]],
   upgrade = FALSE,
   ask = interactive(),

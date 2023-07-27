@@ -357,6 +357,29 @@ pkg_download_internal <- function(pkg, dest_dir = ".", dependencies = FALSE,
   dl$get_downloads()
 }
 
+#' Check if package is installed
+#'
+#' @param  pkg_name Name of package to check
+#' @return TRUE if package is installed, FALSE otherwise
+#' @export
+pkg_is_installed <- function(pkg_name) {
+  return(suppressMessages(
+    suppressWarnings(require(pkg_name, character.only = TRUE))
+  ))
+}
+
+#' Give feedback after checking whether packages are loaded
+#' @param is_installed Vector of booleans indicating whether packages are loaded
+#' @return Nothing
+#' @export
+give_feedback <- function(is_installed) {
+  if (all(is_installed)) {
+    cli::cli_alert_success("All packages are loaded.")
+  } else {
+    cli::cli_alert_warning("{sum(!is_installed)} out of {length(is_installed)} packages are not currently installed.")
+  }
+}
+
 #' Load packages
 #'
 #' Load packages, if missing try to install one or more packages and their
@@ -432,17 +455,8 @@ pkg_download_internal <- function(pkg, dest_dir = ".", dependencies = FALSE,
 
 pkg_load <- function(pkg, install = TRUE, character.only = FALSE, lib = .libPaths()[[1L]], upgrade = FALSE, ask = interactive(), dependencies = NA) {
   # Try to load packages
-  is_installed <- sapply(pkg, function(x) {
-    return(suppressMessages(
-      suppressWarnings(require(x, character.only = TRUE))
-    ))
-  })
-  # Give feedback to user
-  if (all(is_installed)) {
-    cli::cli_alert_success("All packages are loaded.")
-  } else {
-    cli::cli_alert_warning("{sum(!is_installed)} out of {length(is_installed)} packages are not currently installed.")
-  }
+  is_installed <- sapply(pkg, pkg_is_installed)
+  give_feedback(is_installed)
   # Install missing packages if requested
   if (install && length(pkg[!is_installed]) > 0) {
     cli::cli_alert_info("Installing {sum(!is_installed)} missing package(s).")
@@ -450,17 +464,8 @@ pkg_load <- function(pkg, install = TRUE, character.only = FALSE, lib = .libPath
       lib = lib, upgrade = upgrade, ask = ask, dependencies = dependencies
     )
     # After installation try to load all packages
-    is_installed <- sapply(pkg, function(x) {
-      return(suppressMessages(
-        suppressWarnings(require(x, character.only = TRUE))
-      ))
-    })
-    # Give feedback to user
-    if (all(is_installed)) {
-      cli::cli_alert_success("All packages are loaded.")
-    } else {
-      cli::cli_alert_warning("{sum(!is_installed)} out of {length(is_installed)} packages are not currently installed.")
-    }
+    is_installed <- sapply(pkg, pkg_is_installed)
+    give_feedback(is_installed)
   } else {
     cli::cli_alert_info("Do not install missing packages.")
   }
